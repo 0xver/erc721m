@@ -21,6 +21,7 @@ npm install
 pragma solidity ^0.8.4;
 
 import "./bundle/721/ERC721M.sol";
+import "./bundle/173/Ownership.sol";
 
 contract NFT is ERC721M {
     constructor() ERC721M("Non-Fungible Token", "NFT", "pr34v31/prereveal.json") {}
