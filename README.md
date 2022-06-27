@@ -23,8 +23,8 @@ pragma solidity ^0.8.4;
 import "./bundle/721/ERC721M.sol";
 import "./bundle/173/Ownership.sol";
 
-contract NFT is ERC721M {
-    constructor() ERC721M("Non-Fungible Token", "NFT", "pr34v31/prereveal.json") {}
+contract NFT is ERC721M, Ownership {
+    constructor() ERC721M("Non-Fungible Token", "NFT", "pr34v31/prereveal.json") Ownership(msg.sender) {}
 
     function setMerkleRoot(bytes32 _merkleRoot) public ownership {
         _setMerkleRoot(_merkleRoot);
