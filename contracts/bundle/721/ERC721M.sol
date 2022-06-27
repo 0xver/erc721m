@@ -54,7 +54,7 @@ contract ERC721M is ERC721A {
     }
 
     function tokenURI(uint256 _tokenId) public view virtual override returns (string memory) {
-        if ((_tokenId + 1) > _nextTokenId()) {
+        if (!_exists(_tokenId)) {
             return "Token ID out of range";
         } else if (_overrideCid[_tokenId] == true) {
             return string(abi.encodePacked(_ipfs(), _tokenCid[_tokenId]));
@@ -92,7 +92,7 @@ contract ERC721M is ERC721A {
     }
 
     function checkURI(uint256 _tokenId) public view returns (string memory) {
-        if ((_tokenId + 1) > _nextTokenId()) {
+        if (!_exists(_tokenId)) {
             return "Token ID out of range";
         } else if (_revealed() == true) {
             return "Tokens have been revealed";
