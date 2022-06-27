@@ -73,7 +73,7 @@ describe("", function () {
     // Token URI should be prereveal
     expect(await NFT.tokenURI(0)).equal("ipfs://pr34v31/prereveal.json")
     expect(await NFT.tokenURI(1)).equal("ipfs://pr34v31/prereveal.json")
-    expect(await NFT.tokenURI(2)).equal("Token ID out of range")
+    expect(await NFT.tokenURI(2)).equal("Token does not exist")
 
     // Set reveal CID
     await NFT.setRevealCID("r3v34l", false)
@@ -81,7 +81,7 @@ describe("", function () {
     // Check reveal URI
     expect(await NFT.checkURI(0)).equal("ipfs://r3v34l/0")
     expect(await NFT.checkURI(1)).equal("ipfs://r3v34l/1")
-    expect(await NFT.checkURI(2)).equal("Token ID out of range")
+    expect(await NFT.checkURI(2)).equal("Token does not exist")
 
     // Reveal tokens
     await NFT.connect(addr1).reveal()
@@ -92,7 +92,7 @@ describe("", function () {
     // Token URI should return correct identifier
     expect(await NFT.tokenURI(0)).equal("ipfs://r3v34l/0")
     expect(await NFT.tokenURI(1)).equal("ipfs://r3v34l/1")
-    expect(await NFT.tokenURI(2)).equal("Token ID out of range")
+    expect(await NFT.tokenURI(2)).equal("Token does not exist")
 
     // Transfer token ID 1 from addr2 to addr3
     await NFT.connect(addr2).transferFrom(addr2.address, addr3.address, 0)
