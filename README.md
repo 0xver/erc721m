@@ -25,8 +25,16 @@ import "./bundle/721/ERC721M.sol";
 contract NFT is ERC721M {
     constructor() ERC721M("Non-Fungible Token", "NFT", "pr34v31/prereveal.json") {}
 
+    function setMerkleRoot(bytes32 _merkleRoot) public ownership {
+        _setMerkleRoot(_merkleRoot);
+    }
+
     function setRevealCID(string memory _cid, bool _isExtension) public ownership {
         _setRevealCID(_cid, _isExtension);
+    }
+
+    function reveal() public ownership {
+        _reveal();
     }
 
     function mint(uint256 _quantity, bytes32[] calldata _merkleProof) public merkleProof(msg.sender, _merkleProof) {
