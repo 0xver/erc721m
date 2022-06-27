@@ -39,7 +39,7 @@ contract NFT is Constructor {
     /**
      * @dev Mint function for public
      */
-    function publicMint(uint256 _quantity) public gate {
+    function publicMint(uint256 _quantity) public {
         _mint(msg.sender, _quantity);
     }
 

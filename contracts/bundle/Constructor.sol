@@ -8,12 +8,11 @@ import "../erc/165/ERC165.sol";
 import "../erc/721/ERC721.sol";
 import "../erc/721/extensions/ERC721Metadata.sol";
 import "../erc/721/receiver/ERC721Receiver.sol";
-import "../security/Guardian.sol";
 
 /**
  * @dev NFT constructor contract
  */
-contract Constructor is ERC721M, Ownership, Guardian {
+contract Constructor is ERC721M, Ownership {
     receive() external payable {}
     fallback() external payable {}
 
