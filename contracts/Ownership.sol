@@ -2,10 +2,10 @@
 
 pragma solidity ^0.8.4;
 
-import "../../erc/173/ERC173.sol";
+import "./erc/173/ERC173.sol";
 
 /**
- * @dev Implementation of the ERC173
+ * @dev Implementation of ERC173
  */
 contract Ownership is ERC173 {
     address private _owner;
