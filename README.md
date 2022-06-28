@@ -2,9 +2,9 @@
 
 [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/0xver/erc721m/blob/master/LICENSE.md)
 
-## Metadata and Merkle extension for ERC721A
+## ERC721Metadata override for ERC721A
 
-Use this extension for an improved reveal system and merkle modifier. ERC721M is located at `contracts/bundle/721/ERC721M.sol`. There is an NFT template contract located at `contracts/NFT.sol`. The constructor contract located at `contracts/bundle/Constructor.sol` is where other standard implementations should be added such as ERC2981.
+Use this extension for an improved reveal system. ERC721M is located at `contracts/ERC721M.sol`.
 
 # Installation
 Clone erc721m
@@ -17,18 +17,30 @@ npm install
 ```
 
 # Usage
+One of one NFT contract
 ```solidity
 pragma solidity ^0.8.4;
 
-import "./bundle/721/ERC721M.sol";
-import "./bundle/173/Ownership.sol";
+import "./ERC721M.sol";
 
-contract NFT is ERC721M, Ownership {
-    constructor() ERC721M("Non-Fungible Token", "NFT", "pr34v31/prereveal.json") Ownership(msg.sender) {}
+contract NFT is ERC721M {
+    constructor() ERC721M("Non-Fungible Token", "NFT", "") {}
 
-    function setMerkleRoot(bytes32 _merkleRoot) public ownership {
-        _setMerkleRoot(_merkleRoot);
+    function mint(string memory _cid) public {
+        _overrideTokenCID(_nextTokenId(), _cid);
+        _mint(msg.sender, 1);
     }
+}
+```
+Collectible NFT contract
+```solidity
+pragma solidity ^0.8.4;
+
+import "./ERC721M.sol";
+import "./Ownership.sol";
+
+contract NFT is ERC721M {
+    constructor() ERC721M("Non-Fungible Token", "NFT", "pr34v31/prereveal.json") Ownership(msg.sender) {}
 
     function setRevealCID(string memory _cid, bool _isExtension) public ownership {
         _setRevealCID(_cid, _isExtension);
@@ -38,7 +50,7 @@ contract NFT is ERC721M, Ownership {
         _reveal();
     }
 
-    function mint(uint256 _quantity, bytes32[] calldata _merkleProof) public merkleProof(msg.sender, _merkleProof) {
+    function mint(uint256 _quantity) public {
         _mint(msg.sender, _quantity);
     }
 }
