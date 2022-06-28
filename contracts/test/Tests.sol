@@ -2,19 +2,12 @@
 
 pragma solidity ^0.8.4;
 
-import "./bundle/Constructor.sol";
+import "./Constructor.sol";
 
 /**
- * @title NFT smart contract
+ * @title NFT test smart contract
  */
-contract NFT is Constructor {
-    /**
-     * @dev Set Merkle root
-     */
-    function setMerkleRoot(bytes32 _merkleRoot) public ownership {
-        _setMerkleRoot(_merkleRoot);
-    }
-
+contract Tests is Constructor {
     /**
      * @dev Set reveal base CID
      */
@@ -30,16 +23,9 @@ contract NFT is Constructor {
     }
 
     /**
-     * @dev Mint function for whitelist
-     */
-    function privateMint(uint256 _quantity, bytes32[] calldata _merkleProof) public merkleProof(msg.sender, _merkleProof) {
-        _mint(msg.sender, _quantity);
-    }
-
-    /**
      * @dev Mint function for public
      */
-    function publicMint(uint256 _quantity) public {
+    function mint(uint256 _quantity) public {
         _mint(msg.sender, _quantity);
     }
 
