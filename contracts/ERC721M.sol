@@ -1,58 +1,70 @@
 // SPDX-License-Identifier: MIT
+// ERC721M v0.2.0
 
 pragma solidity ^0.8.4;
 
 import "erc721a/contracts/ERC721A.sol";
-import "../../library/utils.sol";
 
 /**
- * @dev Metadata and merckle implementation for ERC721A
+ * @dev ERC721Metadata override for ERC721A
+ * @author Sam Larsen (0xver.io)
  */
 contract ERC721M is ERC721A {
+    // Mapping token ID to token CID
     mapping(uint256 => string) private _tokenCid;
+
+    // Mapping token ID to boolean
     mapping(uint256 => bool) private _overrideCid;
 
+    // Name string variable
     string private _name;
+
+    // Symbol string variable
     string private _symbol;
-    string private _metadata;
+
+    // Reveal CID metadata variable
+    string private _revealCid;
+
+    // Fallback CID string variable
     string private _fallbackCid;
 
+    // Revealed boolean
     bool private _isRevealed;
-    bool private _setURI;
+
+    // Set CID for reveal boolean
+    bool private _setCID;
+
+    // Has json extension boolean
     bool private _jsonExtension;
 
-    bytes32 private root;
-
+    /**
+     * @dev Reconstructs ERC721Metadata from ERC721A
+     */
     constructor(string memory name_, string memory symbol_, string memory fallbackCid_) ERC721A("", "") {
         _name = name_;
         _symbol = symbol_;
         _fallbackCid = fallbackCid_;
         _isRevealed = false;
-        _setURI = false;
+        _setCID = false;
     }
 
+    /**
+     * @dev Name of contract
+     */
     function name() public view virtual override returns (string memory) {
         return _name;
     }
 
+    /**
+     * @dev Symbol of contract
+     */
     function symbol() public view virtual override returns (string memory) {
         return _symbol;
     }
 
-    function _setMerkleRoot(bytes32 _root) internal {
-        root = _root;
-    }
-
-    function merkleRoot() internal view returns (bytes32) {
-        return root;
-    }
-
-    modifier merkleProof(address _to, bytes32[] calldata _merkleProof) {
-        bytes32 leaf = keccak256(abi.encodePacked(_to));
-        require(utils.verify(_merkleProof, merkleRoot(), leaf), "ERC721M: invalid merkle proof");
-        _;
-    }
-
+    /**
+     * @dev Returns string for tokenId
+     */
     function tokenURI(uint256 _tokenId) public view virtual override returns (string memory) {
         if (!_exists(_tokenId)) {
             return "Token does not exist";
@@ -67,30 +79,45 @@ contract ERC721M is ERC721A {
         }
     }
 
+    /**
+     * @dev Token reveal path
+     */
     function _revealURI(uint256 _tokenId) internal view returns (string memory) {
         if (_jsonExtension == true) {
-            return string(abi.encodePacked(_ipfs(), _metadata, "/", utils.toString(_tokenId), ".json"));
+            return string(abi.encodePacked(_ipfs(), _revealCid, "/", _toString(_tokenId), ".json"));
         } else {
-            return string(abi.encodePacked(_ipfs(), _metadata, "/", utils.toString(_tokenId)));
+            return string(abi.encodePacked(_ipfs(), _revealCid, "/", _toString(_tokenId)));
         }
     }
 
+    /**
+     * @dev _ipfs used in place of _baseURI
+     */
     function _ipfs() internal pure returns (string memory) {
         return "ipfs://";
     }
 
-    function _overrideTokenURI(uint256 _tokenId, string memory _cid) internal {
+    /**
+     * @dev Custom token CID for one of one minting
+     */
+    function _overrideTokenCID(uint256 _tokenId, string memory _cid) internal {
         _tokenCid[_tokenId] = _cid;
         _overrideCid[_tokenId] = true;
     }
 
+    /**
+     * @dev Sets the reveal CID
+     */
     function _setRevealCID(string memory _cid, bool _isExtension) internal {
         require(_isRevealed == false, "ERC721M: reveal has already occured");
-        _metadata = _cid;
+        _revealCid = _cid;
         _jsonExtension = _isExtension;
-        _setURI = true;
+        _setCID = true;
     }
 
+    /**
+     * @dev Checks if tokens look correct after setting reveal CID
+     */
     function checkURI(uint256 _tokenId) public view returns (string memory) {
         if (!_exists(_tokenId)) {
             return "Token does not exist";
@@ -101,11 +128,17 @@ contract ERC721M is ERC721A {
         }
     }
 
+    /**
+     * @dev Locks the reveal CID in place
+     */
     function _reveal() internal {
-        require(_setURI == true, "ERC721M: reveal URI not set");
+        require(_setCID == true, "ERC721M: reveal URI not set");
         _isRevealed = true;
     }
 
+    /**
+     * @dev Returns `true` if tokens are revealed
+     */
     function _revealed() internal view returns (bool) {
         return _isRevealed;
     }
