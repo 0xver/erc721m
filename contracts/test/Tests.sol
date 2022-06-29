@@ -16,6 +16,13 @@ contract Tests is Constructor {
     }
 
     /**
+     * @dev Set reveal base CID
+     */
+    function checkURI(uint256 _tokenId) public view returns (string memory) {
+        return _checkURI(_tokenId);
+    }
+
+    /**
      * @dev Reveal token collection
      */
     function reveal() public ownership {

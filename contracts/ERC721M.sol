@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// ERC721M v0.2.0
+// ERC721M v0.2.1
 
 pragma solidity ^0.8.4;
 
@@ -13,7 +13,7 @@ contract ERC721M is ERC721A {
     // Mapping token ID to token CID
     mapping(uint256 => string) private _tokenCid;
 
-    // Mapping token ID to boolean
+    // Mapping token ID to override boolean
     mapping(uint256 => bool) private _overrideCid;
 
     // Name string variable
@@ -51,21 +51,21 @@ contract ERC721M is ERC721A {
     /**
      * @dev Name of contract
      */
-    function name() public view virtual override returns (string memory) {
+    function name() public view virtual override(ERC721A) returns (string memory) {
         return _name;
     }
 
     /**
      * @dev Symbol of contract
      */
-    function symbol() public view virtual override returns (string memory) {
+    function symbol() public view virtual override(ERC721A) returns (string memory) {
         return _symbol;
     }
 
     /**
      * @dev Returns string for tokenId
      */
-    function tokenURI(uint256 _tokenId) public view virtual override returns (string memory) {
+    function tokenURI(uint256 _tokenId) public view virtual override(ERC721A) returns (string memory) {
         if (!_exists(_tokenId)) {
             return "Token does not exist";
         } else if (_overrideCid[_tokenId] == true) {
@@ -109,7 +109,7 @@ contract ERC721M is ERC721A {
      * @dev Sets the reveal CID
      */
     function _setRevealCID(string memory _cid, bool _isExtension) internal {
-        require(_isRevealed == false, "ERC721M: reveal has already occured");
+        require(_isRevealed == false, "ERC721M: tokens revealed");
         _revealCid = _cid;
         _jsonExtension = _isExtension;
         _setCID = true;
@@ -118,7 +118,7 @@ contract ERC721M is ERC721A {
     /**
      * @dev Checks if tokens look correct after setting reveal CID
      */
-    function checkURI(uint256 _tokenId) public view returns (string memory) {
+    function _checkURI(uint256 _tokenId) public view returns (string memory) {
         if (!_exists(_tokenId)) {
             return "Token does not exist";
         } else if (_revealed() == true) {
@@ -132,7 +132,7 @@ contract ERC721M is ERC721A {
      * @dev Locks the reveal CID in place
      */
     function _reveal() internal {
-        require(_setCID == true, "ERC721M: reveal URI not set");
+        require(_setCID == true, "ERC721M: reveal CID not set");
         _isRevealed = true;
     }
 
