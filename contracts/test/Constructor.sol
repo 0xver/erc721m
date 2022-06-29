@@ -16,7 +16,7 @@ contract Constructor is ERC721M, Ownership {
     receive() external payable {}
     fallback() external payable {}
 
-    event Withdrawed(address operator, address receiver, uint256 value);
+    event Withdrawn(address operator, address receiver, uint256 value);
 
     constructor() ERC721M("Non-Fungible Token", "NFT", "pr34v31/prereveal.json") Ownership(msg.sender) {}
 
@@ -24,7 +24,7 @@ contract Constructor is ERC721M, Ownership {
         uint256 balance = address(this).balance;
         (bool success, ) = payable(_account).call{value: address(this).balance}("");
         require(success, "Ether transfer failed");
-        emit Withdrawed(msg.sender, _account, balance);
+        emit Withdrawn(msg.sender, _account, balance);
     }
 
     function supportsInterface(bytes4 interfaceId) public pure override(ERC721A) returns (bool) {
