@@ -1,6 +1,6 @@
 {
   "name": "erc721m",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "author": "Sam Larsen",
   "license": "MIT",
   "devDependencies": {
